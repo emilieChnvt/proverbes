@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Proverbe index{% endblock %}
+
+{% block body %}
+    <h1>Proverbe index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Content</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for proverbe in proverbes %}
+            <tr>
+                <td>{{ proverbe.id }}</td>
+                <td>{{ proverbe.content }}</td>
+                <td>
+                    <a href="{{ path('app_proverbe_show', {'id': proverbe.id}) }}">show</a>
+                    <a href="{{ path('app_proverbe_edit', {'id': proverbe.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_proverbe_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Proverbe{% endblock %}
+
+{% block body %}
+    <h1>Proverbe</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ proverbe.id }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ proverbe.content }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_proverbe_index') }}">back to list</a>
+
+    <a href="{{ path('app_proverbe_edit', {'id': proverbe.id}) }}">edit</a>
+
+    {{ include('proverbe/_delete_form.html.twig') }}
+{% endblock %}
