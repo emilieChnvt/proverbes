@@ -41,10 +41,11 @@ final class ProverbeController extends AbstractController
                 $extension = strtolower($file->getClientOriginalExtension()); // on lit l'extension
 
                 $records = [];
+                dump($extension);
 
                 if ($extension === 'csv') {
                     $csv = Reader::createFromPath($file->getPathname(), 'r');
-                    $csv->setDelimiter(';'); // ou ',' selon ton fichier
+                    $csv->setDelimiter(','); // ou ',' selon ton fichier
                     $csv->setHeaderOffset(0);
                     $records = iterator_to_array($csv->getRecords());
                 } else { // Excel .xlsx, .xls
