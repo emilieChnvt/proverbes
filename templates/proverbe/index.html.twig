@@ -22,6 +22,10 @@
                     <a href="{{ path('app_proverbe_show', {'id': proverbe.id}) }}">show</a>
                     <a href="{{ path('app_proverbe_edit', {'id': proverbe.id}) }}">edit</a>
                 </td>
+                <td>
+                    <img src="data:image/png;base64,{{ qrCodes[proverbe.id] }}" alt="QR code">
+
+                </td>
             </tr>
         {% else %}
             <tr>

@@ -6,25 +6,43 @@ use App\Entity\Proverbe;
 use App\Form\CsvUploadTypeForm;
 use App\Form\ProverbeForm;
 use App\Repository\ProverbeRepository;
-use Doctrine\Common\Collections\ReadableCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Endroid\QrCode\Builder\BuilderInterface;
 use League\Csv\Reader;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Route('/proverbe')]
 final class ProverbeController extends AbstractController
 {
     #[Route(name: 'app_proverbe_index', methods: ['GET'])]
-    public function index(ProverbeRepository $proverbeRepository): Response
+    public function index(ProverbeRepository $proverbeRepository, BuilderInterface $builder, UrlGeneratorInterface $generator): Response
     {
+        if(!$this->getUser()){return $this->redirectToRoute('app_login');}
+
+        $qrCodes = [];
+        foreach ($proverbeRepository->findAll() as $proverbe) {
+            $url = $generator->generate('app_proverbe_show', ['id' => $proverbe->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+            $result = $builder->build(
+                data: $url,
+                size: 200,
+                margin: 10
+            );
+
+            $qrCodes[$proverbe->getId()] = base64_encode($result->getString());
+            //result = objet retourné par methode build
+            //   on recupere chaine binaire $result->getString()
+            // que l'on convertit pour le HTML grâce a  base64_encode
+
+        }
         if(!$this->getUser()){return $this->redirectToRoute('app_login');}
         return $this->render('proverbe/index.html.twig', [
             'proverbes' => $proverbeRepository->findAll(),
+            'qrCodes' => $qrCodes,
         ]);
     }
 
@@ -88,7 +106,7 @@ final class ProverbeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_proverbe_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_proverbe_show', methods: ['GET'])]
     public function show(Proverbe $proverbe): Response
     {
         return $this->render('proverbe/show.html.twig', [
@@ -114,7 +132,7 @@ final class ProverbeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_proverbe_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_proverbe_delete', methods: ['POST'])]
     public function delete(Request $request, Proverbe $proverbe, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$proverbe->getId(), $request->getPayload()->getString('_token'))) {
