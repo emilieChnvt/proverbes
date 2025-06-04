@@ -22,6 +22,7 @@ final class ProverbeController extends AbstractController
     #[Route(name: 'app_proverbe_index', methods: ['GET'])]
     public function index(ProverbeRepository $proverbeRepository): Response
     {
+        if(!$this->getUser()){return $this->redirectToRoute('app_login');}
         return $this->render('proverbe/index.html.twig', [
             'proverbes' => $proverbeRepository->findAll(),
         ]);
@@ -30,11 +31,12 @@ final class ProverbeController extends AbstractController
     #[Route('/new', name: 'app_proverbe_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){return $this->redirectToRoute('app_login');}
+
         $form = $this->createForm(CsvUploadTypeForm::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $file */
             $file = $form->get('csvFile')->getData();
 
             if ($file) {
