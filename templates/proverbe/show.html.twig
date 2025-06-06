@@ -18,6 +18,8 @@
         </tbody>
     </table>
 
+    <img src="{{ proverbe.qrCode }}" alt="QR Code du proverbe" />
+
     <a href="{{ path('app_proverbe_index') }}">back to list</a>
 
     <a href="{{ path('app_proverbe_edit', {'id': proverbe.id}) }}">edit</a>
