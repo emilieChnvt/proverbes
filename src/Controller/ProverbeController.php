@@ -31,30 +31,19 @@ final class ProverbeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/qr', name: 'app_proverbe_qr', methods: ['GET'])]
+    #[Route('qr/{id}', name: 'app_proverbe_qr', methods: ['GET'])]
     public function showQr(
-        Proverbe $proverbe,
-        BuilderInterface $builder,
-        UrlGeneratorInterface $urlGenerator
-    ): Response {
-        $url = $urlGenerator->generate('app_proverbe_show', ['id' => $proverbe->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+        Proverbe $proverbe,): Response {
 
-        $result = $builder->build(
-            data: $url,
-            size: 300,
-            margin: 10
-        );
-
-        $qrCodeBase64 = base64_encode($result->getString());
 
         return $this->render('proverbe/qr.html.twig', [
             'proverbe' => $proverbe,
-            'qrCode' => $qrCodeBase64,
         ]);
     }
 
     #[Route('/new', name: 'app_proverbe_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, BuilderInterface $builder,
+                        ): Response
     {
         if(!$this->getUser()){return $this->redirectToRoute('app_login');}
 
@@ -93,13 +82,22 @@ final class ProverbeController extends AbstractController
 
                 foreach ($records as $record) {
                     if (!isset($record['content'], $record['author'])) {
-                        continue; // skip ligne incomplète
+                        continue;
                     }
 
                     $proverbe = new Proverbe();
                     $proverbe->setContent($record['content']);
                     $proverbe->setAuthor($record['author']);
+
                     $entityManager->persist($proverbe);
+                    $entityManager->flush(); // flush pour avoir l'ID
+
+                    $url = $this->generateUrl('app_proverbe_show', ['id' => $proverbe->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $result = $builder->build(data: $url, size: 300, margin: 10);
+                    $pngData = $result->getString();
+                    $proverbe->setQrCode('data:image/png;base64,' . base64_encode($pngData));
+
+                    $entityManager->flush(); // flush final avec le QR
                 }
 
                 $entityManager->flush();
@@ -110,6 +108,7 @@ final class ProverbeController extends AbstractController
 
         return $this->render('proverbe/new.html.twig', [
             'form' => $form,
+
         ]);
     }
 

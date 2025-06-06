@@ -4,9 +4,8 @@
     <h1>QR Code du proverbe</h1>
     <p>{{ proverbe.content }} — {{ proverbe.author }}</p>
 
-    <img src="data:image/png;base64,{{ qrCode }}" alt="QR Code du proverbe" />
 
-    <a href="{{ path('app_proverbe_index') }}">Retour à la liste</a>
+    <img src="{{ proverbe.qrCode }}" alt="QR Code du proverbe" />
 
 
 {% endblock %}

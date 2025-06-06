@@ -19,6 +19,9 @@ class Proverbe
     #[ORM\Column(length: 255)]
     private ?string $author = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $qrCode = null;
+
 
 
     public function getId(): ?int
@@ -46,6 +49,18 @@ class Proverbe
     public function setAuthor(string $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getQrCode(): ?string
+    {
+        return $this->qrCode;
+    }
+
+    public function setQrCode(string $qrCode): static
+    {
+        $this->qrCode = $qrCode;
 
         return $this;
     }

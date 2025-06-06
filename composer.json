@@ -12,6 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.3",
         "endroid/qr-code-bundle": "^6.0",
+        "knplabs/knp-snappy-bundle": "^1.10",
         "league/csv": "^9.23",
         "phpdocumentor/reflection-docblock": "^5.6",
         "phpoffice/phpspreadsheet": "^4.3",
