@@ -90,14 +90,14 @@ final class ProverbeController extends AbstractController
                     $proverbe->setAuthor($record['author']);
 
                     $entityManager->persist($proverbe);
-                    $entityManager->flush(); // flush pour avoir l'ID
+                    $entityManager->flush();
 
                     $url = $this->generateUrl('app_proverbe_show', ['id' => $proverbe->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
                     $result = $builder->build(data: $url, size: 300, margin: 10);
                     $pngData = $result->getString();
                     $proverbe->setQrCode('data:image/png;base64,' . base64_encode($pngData));
 
-                    $entityManager->flush(); // flush final avec le QR
+                    $entityManager->flush();
                 }
 
                 $entityManager->flush();
