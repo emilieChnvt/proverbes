@@ -16,7 +16,7 @@ class CsvUploadTypeForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('csvFile', FileType::class, [
+            ->add('file', FileType::class, [
                 'label' => 'csv_file',
                 'mapped' => false,
                 'required' => true,

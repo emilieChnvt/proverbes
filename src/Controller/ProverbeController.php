@@ -16,33 +16,40 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+
 #[Route('/proverbe')]
 final class ProverbeController extends AbstractController
 {
     #[Route(name: 'app_proverbe_index', methods: ['GET'])]
     public function index(ProverbeRepository $proverbeRepository, BuilderInterface $builder, UrlGeneratorInterface $generator): Response
     {
-        if(!$this->getUser()){return $this->redirectToRoute('app_login');}
 
-        $qrCodes = [];
-        foreach ($proverbeRepository->findAll() as $proverbe) {
-            $url = $generator->generate('app_proverbe_show', ['id' => $proverbe->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-            $result = $builder->build(
-                data: $url,
-                size: 200,
-                margin: 10
-            );
 
-            $qrCodes[$proverbe->getId()] = base64_encode($result->getString());
-            //result = objet retourné par methode build
-            //   on recupere chaine binaire $result->getString()
-            // que l'on convertit pour le HTML grâce a  base64_encode
-
-        }
         if(!$this->getUser()){return $this->redirectToRoute('app_login');}
         return $this->render('proverbe/index.html.twig', [
             'proverbes' => $proverbeRepository->findAll(),
-            'qrCodes' => $qrCodes,
+        ]);
+    }
+
+    #[Route('/{id}/qr', name: 'app_proverbe_qr', methods: ['GET'])]
+    public function showQr(
+        Proverbe $proverbe,
+        BuilderInterface $builder,
+        UrlGeneratorInterface $urlGenerator
+    ): Response {
+        $url = $urlGenerator->generate('app_proverbe_show', ['id' => $proverbe->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $result = $builder->build(
+            data: $url,
+            size: 300,
+            margin: 10
+        );
+
+        $qrCodeBase64 = base64_encode($result->getString());
+
+        return $this->render('proverbe/qr.html.twig', [
+            'proverbe' => $proverbe,
+            'qrCode' => $qrCodeBase64,
         ]);
     }
 
@@ -55,22 +62,22 @@ final class ProverbeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file = $form->get('csvFile')->getData();
+            $file = $form->get('file')->getData(); //recupere fichier
 
             if ($file) {
                 $extension = strtolower($file->getClientOriginalExtension()); // on lit l'extension
 
-                $records = [];
+                $records = []; //tableau associatif ['content' => '...', 'author' => '...']
                 dump($extension);
 
                 if ($extension === 'csv') {
-                    $csv = Reader::createFromPath($file->getPathname(), 'r');
-                    $csv->setDelimiter(','); // ou ',' selon ton fichier
-                    $csv->setHeaderOffset(0);
-                    $records = iterator_to_array($csv->getRecords());
+                    $csv = Reader::createFromPath($file->getPathname(), 'r'); //lit  fichier avec league/csv
+                    $csv->setDelimiter(','); //colonnes séparées par ','
+                    $csv->setHeaderOffset(0); // primière ligne = content, author
+                    $records = iterator_to_array($csv->getRecords()); //lit ligne suivantes et les associes aux colonnes
                 } else { // Excel .xlsx, .xls
-                    $spreadsheet = IOFactory::load($file->getPathname());//ouvrir fichier
-                    $sheet = $spreadsheet->getActiveSheet();// recupere feuille active et toutes les lignes
+                    $spreadsheet = IOFactory::load($file->getPathname());//ouvrir fichier excel avec spreadsheet
+                    $sheet = $spreadsheet->getActiveSheet();// recupere première feuille fichier et toutes les lignes
                     $rows = $sheet->toArray(null, true, true, true); // retourne un tableau avec A, B, C...
 
                     $headers = array_shift($rows); // première ligne = en-têtes
