@@ -23,18 +23,15 @@ final class ProverbeController extends AbstractController
     #[Route(name: 'app_proverbe_index', methods: ['GET'])]
     public function index(ProverbeRepository $proverbeRepository, BuilderInterface $builder, UrlGeneratorInterface $generator): Response
     {
-
-
         if(!$this->getUser()){return $this->redirectToRoute('app_login');}
         return $this->render('proverbe/index.html.twig', [
             'proverbes' => $proverbeRepository->findAll(),
         ]);
     }
 
-    #[Route('qr/{id}', name: 'app_proverbe_qr', methods: ['GET'])]
+    #[Route('/qr/{id}', name: 'app_proverbe_qr', methods: ['GET'])]
     public function showQr(
         Proverbe $proverbe,): Response {
-
 
         return $this->render('proverbe/qr.html.twig', [
             'proverbe' => $proverbe,
@@ -45,7 +42,7 @@ final class ProverbeController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, BuilderInterface $builder,
                         ): Response
     {
-        if(!$this->getUser()){return $this->redirectToRoute('app_login');}
+        if(!in_array('ROLE_ADMIN', $this->getUser()->getRoles())){return $this->redirectToRoute('app_login');}
 
         $form = $this->createForm(CsvUploadTypeForm::class);
         $form->handleRequest($request);
@@ -123,6 +120,8 @@ final class ProverbeController extends AbstractController
     #[Route('/{id}/edit', name: 'app_proverbe_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Proverbe $proverbe, EntityManagerInterface $entityManager): Response
     {
+        if(!in_array('ROLE_ADMIN', $this->getUser()->getRoles())){return $this->redirectToRoute('app_login');}
+
         $form = $this->createForm(ProverbeForm::class, $proverbe);
         $form->handleRequest($request);
 
@@ -141,6 +140,8 @@ final class ProverbeController extends AbstractController
     #[Route('/delete/{id}', name: 'app_proverbe_delete', methods: ['POST'])]
     public function delete(Request $request, Proverbe $proverbe, EntityManagerInterface $entityManager): Response
     {
+        if(!in_array('ROLE_ADMIN', $this->getUser()->getRoles())){return $this->redirectToRoute('app_login');}
+
         if ($this->isCsrfTokenValid('delete'.$proverbe->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($proverbe);
             $entityManager->flush();

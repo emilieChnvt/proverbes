@@ -16,7 +16,7 @@ class Proverbe
     #[ORM\Column(length: 255)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $author = null;
 
     #[ORM\Column(type: 'text', nullable: true)]

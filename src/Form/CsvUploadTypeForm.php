@@ -22,6 +22,7 @@ class CsvUploadTypeForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new File([
+                        'maxSize' => '1024k',
 
                             'mimeTypes' => [
                                 'text/plain',

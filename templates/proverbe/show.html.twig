@@ -1,28 +1,27 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Proverbe{% endblock %}
-
 {% block body %}
-    <h1>Proverbe</h1>
+    <h1 style="text-align: center; font-size: 3rem; margin-bottom: 2rem;">Proverbe</h1>
 
-    <table class="table">
+    <table class="table" style="margin: 0 auto; font-size: 1.5rem; text-align: center;">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ proverbe.id }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ proverbe.content }}</td>
-            </tr>
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+        <tr>
+            <td>{{ proverbe.id }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td style="font-weight: bold; font-size: 2rem;">{{ proverbe.content }}</td>
+        </tr>
         </tbody>
     </table>
 
-    <img src="{{ proverbe.qrCode }}" alt="QR Code du proverbe" />
+   {% if 'ROLE_ADMIN' in app.user.roles %}
+       <div style="text-align: center; margin-top: 2rem;">
+           <a href="{{ path('app_proverbe_index') }}" style="margin-right: 1rem;">back to list</a>
+           <a href="{{ path('app_proverbe_edit', {'id': proverbe.id}) }}">edit</a>
+       </div>
 
-    <a href="{{ path('app_proverbe_index') }}">back to list</a>
-
-    <a href="{{ path('app_proverbe_edit', {'id': proverbe.id}) }}">edit</a>
-
-    {{ include('proverbe/_delete_form.html.twig') }}
+       <div style="text-align: center; margin-top: 1rem;">
+           {{ include('proverbe/_delete_form.html.twig') }}
+       </div>
+    {% endif %}
 {% endblock %}
