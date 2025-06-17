@@ -22,7 +22,7 @@ final class PdfController extends AbstractController
         // enable-local-file-access = true, autorises wkhtmltopdf à accéder aux ressources locales
         return new PdfResponse(
             $knpSnappyPdf->getOutputFromHtml($html),
-            'file.pdf'
+            'QrCode.pdf'
         );
     }
 }
