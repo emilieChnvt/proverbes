@@ -1,16 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}QR Code - Proverbe{% endblock %}
+
 {% block body %}
-    <h1>QR Code du proverbe</h1>
-    <p>{{ proverbe.content }} — {{ proverbe.author }}</p>
+    <div class="max-w-md mx-auto mt-16 p-6 bg-white rounded-lg shadow-lg text-center">
+        <h1 class="text-2xl font-bold mb-4 text-gray-800">QR Code du proverbe</h1>
 
+        <p class="mb-6 text-gray-700 italic">« {{ proverbe.content }} » — <span class="font-semibold">{{ proverbe.author }}</span></p>
 
-    <img src="{{ proverbe.qrCode }}" alt="QR Code du proverbe" />
+        <img src="{{ proverbe.qrCode }}" alt="QR Code du proverbe" class="mx-auto mb-6 rounded border border-gray-300 shadow" />
 
-
+        <a href="{{ path('app_proverbe_index') }}"
+           class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            Retour à la liste
+        </a>
+    </div>
 {% endblock %}
-
-{% block title %}
-
-{% endblock %}
-

@@ -3,43 +3,71 @@
 {% block title %}Proverbe index{% endblock %}
 
 {% block body %}
-    <h1>Proverbe index</h1>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Liste des Proverbes</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Content</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for proverbe in proverbes %}
-            <tr>
-                <td>{{ proverbe.id }}</td>
-                <td>{{ proverbe.content }}</td>
-                <td>
-                    <a href="{{ path('app_proverbe_show', {id:proverbe.id}) }}">show</a>
-                    <a href="{{ path('app_proverbe_edit', {id:proverbe.id}) }}">edit</a>
-                </td>
-                <td>
-                    <a href="{{ path('app_proverbe_qr', {id:proverbe.id}) }}">
-                        <button>Voir QR Code</button>
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('app_pdf', {id:proverbe.id}) }}">
-                        <button>PDF</button>
-                    </a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="text-left py-3 px-6 uppercase font-semibold text-sm">ID</th>
+                    <th class="text-left py-3 px-6 uppercase font-semibold text-sm">Contenu</th>
+                    <th class="text-center py-3 px-6 uppercase font-semibold text-sm">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for proverbe in proverbes %}
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-4 px-6 whitespace-nowrap text-gray-700 font-medium">{{ proverbe.id }}</td>
+                        <td class="py-4 px-6 text-gray-600">
+                            {{ proverbe.content|length > 100 ? proverbe.content|slice(0, 100) ~ '...' : proverbe.content }}
+                        </td>
+                        <td class="py-4 px-6 text-center space-x-2">
+                            <a href="{{ path('app_proverbe_show', {id: proverbe.id}) }}"
+                               class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                               title="Voir">
+                                Voir
+                            </a>
 
-    <a href="{{ path('app_proverbe_new') }}">Create new</a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_proverbe_edit', {id: proverbe.id}) }}"
+                                   class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-3 py-1 rounded text-sm"
+                                   title="Modifier">
+                                    Editer
+                                </a>
+
+                                {# Si tu as un bouton supprimer, place-le ici #}
+                                {# <a href="{{ path('app_proverbe_delete', {id: proverbe.id}) }}" ... >Supprimer</a> #}
+                            {% endif %}
+
+                            <a href="{{ path('app_proverbe_qr', {id: proverbe.id}) }}"
+                               class="inline-block bg-teal-500 hover:bg-teal-600 text-white px-3 py-1 rounded text-sm"
+                               title="Voir QR Code">
+                                QR Code
+                            </a>
+                            <a href="{{ path('app_pdf', {id: proverbe.id}) }}"
+                               class="inline-block bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                               title="Télécharger PDF">
+                                PDF
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="py-6 text-center text-gray-500 italic">Aucun proverbe trouvé.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="mt-8 text-center">
+                <a href="{{ path('app_proverbe_new') }}"
+                   class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg text-lg">
+                    Ajouter un nouveau proverbe
+                </a>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
