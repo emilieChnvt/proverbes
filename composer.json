@@ -42,6 +42,7 @@
         "symfony/string": "7.3.*",
         "symfony/translation": "7.3.*",
         "symfony/twig-bundle": "7.3.*",
+        "symfony/ux-dropzone": "^2.26",
         "symfony/ux-turbo": "^2.25",
         "symfony/validator": "7.3.*",
         "symfony/web-link": "7.3.*",

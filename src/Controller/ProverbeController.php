@@ -142,7 +142,7 @@ final class ProverbeController extends AbstractController
     {
         if(!in_array('ROLE_ADMIN', $this->getUser()->getRoles())){return $this->redirectToRoute('app_login');}
 
-        if ($this->isCsrfTokenValid('delete'.$proverbe->getId(), $request->getPayload()->getString('_token'))) {
+        if ($proverbe) {
             $entityManager->remove($proverbe);
             $entityManager->flush();
         }
