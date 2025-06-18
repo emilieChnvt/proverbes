@@ -1,11 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Proverbe{% endblock %}
+{% block title %}Nouveau Proverbe{% endblock %}
 
 {% block body %}
-    <h1>Create new Proverbe</h1>
+    <div class="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-2xl">
+        <h1 class="text-3xl font-bold text-blue-600 mb-6">Créer un nouveau proverbe</h1>
 
-    {{ include('proverbe/_form.html.twig') }}
+        {{ include('proverbe/_form.html.twig', { button_label: 'Créer' }) }}
 
-    <a href="{{ path('app_proverbe_index') }}">back to list</a>
+        <a href="{{ path('app_proverbe_index') }}"
+           class="inline-block mt-6 text-sm text-gray-600 hover:text-blue-600 transition duration-200">
+            ← Retour à la liste
+        </a>
+    </div>
 {% endblock %}

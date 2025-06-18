@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
-#[Route('/proverbe')]
+#[Route('/')]
 final class ProverbeController extends AbstractController
 {
     #[Route(name: 'app_proverbe_index', methods: ['GET'])]
@@ -29,7 +29,7 @@ final class ProverbeController extends AbstractController
         ]);
     }
 
-    #[Route('/qr/{id}', name: 'app_proverbe_qr', methods: ['GET'])]
+    #[Route('/proverbe/qr/{id}', name: 'app_proverbe_qr', methods: ['GET'])]
     public function showQr(
         Proverbe $proverbe,): Response {
 
@@ -38,7 +38,7 @@ final class ProverbeController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_proverbe_new', methods: ['GET', 'POST'])]
+    #[Route('/proverbe/new', name: 'app_proverbe_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, BuilderInterface $builder,
                         ): Response
     {
@@ -109,7 +109,7 @@ final class ProverbeController extends AbstractController
         ]);
     }
 
-    #[Route('/show/{id}', name: 'app_proverbe_show', methods: ['GET'])]
+    #[Route('/proverbe/show/{id}', name: 'app_proverbe_show', methods: ['GET'])]
     public function show(Proverbe $proverbe): Response
     {
         return $this->render('proverbe/show.html.twig', [
@@ -117,7 +117,7 @@ final class ProverbeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_proverbe_edit', methods: ['GET', 'POST'])]
+    #[Route('/proverbe/{id}/edit', name: 'app_proverbe_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Proverbe $proverbe, EntityManagerInterface $entityManager): Response
     {
         if(!in_array('ROLE_ADMIN', $this->getUser()->getRoles())){return $this->redirectToRoute('app_login');}
@@ -137,7 +137,7 @@ final class ProverbeController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'app_proverbe_delete', methods: ['POST'])]
+    #[Route('/proverbe/delete/{id}', name: 'app_proverbe_delete', methods: ['POST'])]
     public function delete(Request $request, Proverbe $proverbe, EntityManagerInterface $entityManager): Response
     {
         if(!in_array('ROLE_ADMIN', $this->getUser()->getRoles())){return $this->redirectToRoute('app_login');}
