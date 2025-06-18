@@ -10,12 +10,4 @@
         </tbody>
     </table>
 
-   {% if 'ROLE_ADMIN' in app.user.roles %}
-       <div style="text-align: center; margin-top: 2rem;">
-           <a href="{{ path('app_proverbe_index') }}" style="margin-right: 1rem;">back to list</a>
-           <a href="{{ path('app_proverbe_edit', {'id': proverbe.id}) }}">edit</a>
-       </div>
-
-
-    {% endif %}
 {% endblock %}
