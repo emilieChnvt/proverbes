@@ -54,7 +54,6 @@ final class ProverbeController extends AbstractController
                 $extension = strtolower($file->getClientOriginalExtension()); // on lit l'extension
 
                 $records = []; //tableau associatif ['content' => '...', 'author' => '...']
-                dump($extension);
 
                 if ($extension === 'csv') {
                     $csv = Reader::createFromPath($file->getPathname(), 'r'); //lit  fichier avec league/csv
@@ -128,7 +127,7 @@ final class ProverbeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_proverbe_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_proverbe_index');
         }
 
         return $this->render('proverbe/edit.html.twig', [
@@ -147,6 +146,6 @@ final class ProverbeController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_proverbe_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_proverbe_index');
     }
 }
