@@ -3,11 +3,7 @@
 
     <table class="table" style="margin: 0 auto; font-size: 1.5rem; text-align: center;">
         <tbody>
-        {% if 'ROLE_ADMIN' in app.user.roles %}
-        <tr>
-            <td>{{ proverbe.id }}</td>
-        </tr>
-        {% endif %}
+
         <tr>
             <td style="font-weight: bold; font-size: 2rem;">{{ proverbe.content }}</td>
         </tr>
