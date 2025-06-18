@@ -137,7 +137,7 @@ final class ProverbeController extends AbstractController
         ]);
     }
 
-    #[Route('/proverbe/delete/{id}', name: 'app_proverbe_delete', methods: ['POST'])]
+    #[Route('/proverbe/delete/{id}', name: 'app_proverbe_delete')]
     public function delete(Request $request, Proverbe $proverbe, EntityManagerInterface $entityManager): Response
     {
         if(!in_array('ROLE_ADMIN', $this->getUser()->getRoles())){return $this->redirectToRoute('app_login');}
