@@ -29,10 +29,12 @@
                                 Voir
                             </a>
 
-                            {% if is_granted('ROLE_ADMIN') %}
+                            {% if app.user %}
+                            {% if 'ROLE_ADMIN' in app.user.roles %}
 
 
                                  <a href="{{ path('app_proverbe_delete', {id: proverbe.id}) }}" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-3 py-1 rounded text-sm" >Supprimer</a>
+                            {% endif %}
                             {% endif %}
 
                             <a href="{{ path('app_proverbe_qr', {id: proverbe.id}) }}"
@@ -56,13 +58,16 @@
             </table>
         </div>
 
-        {% if is_granted('ROLE_ADMIN') %}
+
+        {% if app.user %}
+        {% if 'ROLE_ADMIN' in app.user.roles %}
             <div class="mt-8 text-center">
                 <a href="{{ path('app_proverbe_new') }}"
                    class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg text-lg">
                     Ajouter un nouveau proverbe
                 </a>
             </div>
+        {% endif %}
         {% endif %}
     </div>
 {% endblock %}
